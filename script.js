@@ -85,4 +85,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const deleteBtn = document.querySelector(
     '[data-testid="test-todo-delete-button"]',
   );
+
+  editBtn.addEventListener("click", () => {
+    console.log("Edit clicked");
+  });
+
+  deleteBtn.addEventListener("click", () => {
+    alert("Delete clicked");
+  });
 });
