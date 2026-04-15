@@ -56,4 +56,33 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   updateTimeRemaining();
+
+  const checkbox = document.querySelector(
+    '[data-testid="test-todo-complete-toggle"]',
+  );
+  const card = document.querySelector('[data-testid="test-todo-card"]');
+  const statusEl = document.querySelector('[data-testid="test-todo-status"]');
+
+  checkbox.addEventListener("change", (e) => {
+    if (e.target.checked) {
+      card.classList.add("done");
+      statusEl.textContent = "Done";
+      statusEl.classList.remove("status-pending");
+      statusEl.classList.add("status-done");
+      statusEl.setAttribute("aria-label", "Status: Done");
+    } else {
+      card.classList.remove("done");
+      statusEl.textContent = "Pending";
+      statusEl.classList.remove("status-done");
+      statusEl.classList.add("status-pending");
+      statusEl.setAttribute("aria-label", "Status: Pending");
+    }
+  });
+
+  const editBtn = document.querySelector(
+    '[data-testid="test-todo-edit-button"]',
+  );
+  const deleteBtn = document.querySelector(
+    '[data-testid="test-todo-delete-button"]',
+  );
 });
