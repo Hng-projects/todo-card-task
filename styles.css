@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
-
 :root {
   --bg-page: #f8fafc;
   --bg-card: #ffffff;
@@ -13,8 +11,14 @@
   --badge-high-bg: #fee2e2;
   --badge-high-text: #b91c1c;
 
-  --badge-pending-bg: #fef9c3;
-  --badge-pending-text: #854d0e;
+  --badge-medium-bg: #fef3c7;
+  --badge-medium-text: #b45309;
+
+  --badge-pending-bg: #f1f5f9;
+  --badge-pending-text: #475569;
+
+  --badge-progress-bg: #dbeafe;
+  --badge-progress-text: #1e40af;
 
   --badge-done-bg: #dcfce7;
   --badge-done-text: #15803d;
@@ -28,6 +32,8 @@
 
   --transition: all 0.2s ease-in-out;
 }
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 * {
   box-sizing: border-box;
@@ -52,6 +58,22 @@ body {
   justify-content: center;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
 .todo-card {
   background-color: var(--bg-card);
   border-radius: 16px;
@@ -60,9 +82,35 @@ body {
     0 2px 4px -2px rgb(0 0 0 / 0.1);
   width: 100%;
   max-width: 480px;
-  padding: 1.5rem;
+  position: relative;
   border: 1px solid var(--border-color);
-  transition: box-shadow 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  overflow: hidden;
+}
+
+.priority-indicator {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.priority-indicator-high {
+  background-color: var(--badge-high-text);
+}
+.priority-indicator-medium {
+  background-color: var(--badge-medium-text);
+}
+.priority-indicator-low {
+  background-color: var(--badge-done-text);
+}
+
+.card-content {
+  padding: 1.5rem;
 }
 
 .todo-card:hover {
@@ -74,6 +122,16 @@ body {
 .todo-card.done .todo-title {
   text-decoration: line-through;
   color: var(--text-secondary);
+}
+
+.todo-card.done {
+  border-color: var(--badge-done-text);
+}
+.todo-card.in-progress {
+  border-color: var(--badge-progress-text);
+  box-shadow:
+    0 0 0 1px var(--badge-progress-text),
+    0 4px 6px -1px rgb(0 0 0 / 0.1);
 }
 
 .card-header {
@@ -118,26 +176,91 @@ body {
   background-color: var(--badge-high-bg);
   color: var(--badge-high-text);
 }
+.priority-medium {
+  background-color: var(--badge-medium-bg);
+  color: var(--badge-medium-text);
+}
+.priority-low {
+  background-color: var(--badge-done-bg);
+  color: var(--badge-done-text);
+}
+
+.status-wrap {
+  position: relative;
+}
+
+.status-control {
+  appearance: none;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.35rem 1.75rem 0.35rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  transition: var(--transition);
+}
+
+.status-control:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
 
 .status-pending {
   background-color: var(--badge-pending-bg);
   color: var(--badge-pending-text);
+  border-color: var(--badge-pending-text);
 }
-
+.status-progress {
+  background-color: var(--badge-progress-bg);
+  color: var(--badge-progress-text);
+  border-color: var(--badge-progress-text);
+}
 .status-done {
   background-color: var(--badge-done-bg);
   color: var(--badge-done-text);
+  border-color: var(--badge-done-text);
 }
 
 .card-body {
   margin-bottom: 1.5rem;
 }
 
+.desc-wrap {
+  margin-bottom: 1rem;
+}
+
 .todo-description {
   font-size: 0.9375rem;
   color: var(--text-secondary);
   line-height: 1.5;
-  margin-bottom: 1rem;
+  transition: max-height 0.3s ease;
+}
+
+.todo-description.collapsed {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.expand-toggle {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  margin-top: 0.25rem;
+}
+.expand-toggle:hover {
+  text-decoration: underline;
 }
 
 .meta-data {
@@ -168,6 +291,14 @@ body {
 .time-hint svg {
   width: 14px;
   height: 14px;
+}
+
+.overdue-badge {
+  background-color: var(--badge-high-bg);
+  color: var(--badge-high-text);
+  font-size: 0.65rem;
+  padding: 0.15rem 0.4rem;
+  margin-left: 0.5rem;
 }
 
 .tags-list {
@@ -211,7 +342,7 @@ body {
 
 .complete-checkbox {
   appearance: none;
-  background-color: #fff;
+  background-color: var(--bg-card);
   margin: 0;
   font: inherit;
   color: currentColor;
@@ -273,6 +404,22 @@ body {
   justify-content: center;
   transition: var(--transition);
   color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  color: white;
 }
 
 .btn-icon {
@@ -286,7 +433,7 @@ body {
   height: 16px;
 }
 
-.btn:hover {
+.btn:hover:not(.btn-primary) {
   background-color: var(--tag-bg);
   border-color: var(--text-secondary);
   color: var(--text-primary);
@@ -301,4 +448,67 @@ body {
 .btn:focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
+}
+
+/* Edit Form Styles */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: var(--text-primary);
+}
+
+.form-control {
+  font-family: inherit;
+  font-size: 0.9375rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-primary);
+  transition: var(--transition);
+  background-color: var(--bg-card);
+  width: 100%;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+@media (min-width: 480px) {
+  .form-row {
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
 }
