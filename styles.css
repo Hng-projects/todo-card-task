@@ -450,6 +450,11 @@ body {
   outline-offset: 2px;
 }
 
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Edit Form Styles */
 .form-group {
   display: flex;

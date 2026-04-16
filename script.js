@@ -181,13 +181,16 @@ document.addEventListener("DOMContentLoaded", () => {
       statusSelect.classList.add("status-done");
       card.classList.add("done");
       checkbox.checked = true;
+      editBtn.disabled = true;
     } else if (status === "In Progress") {
       statusSelect.classList.add("status-progress");
       card.classList.add("in-progress");
       checkbox.checked = false;
+      editBtn.disabled = false;
     } else {
       statusSelect.classList.add("status-pending");
       checkbox.checked = false;
+      editBtn.disabled = false;
     }
 
     updateTimeRemaining();
@@ -221,6 +224,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function openEditMode() {
+    if (statusSelect.value === "Done") return;
+
     editTitleInput.value = titleEl.textContent;
     editDescInput.value = descEl.textContent;
     editPrioritySelect.value = priorityEl.textContent;
